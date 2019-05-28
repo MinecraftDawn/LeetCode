@@ -6,6 +6,9 @@ class Solution:
         
         for i in range(length-2):
             num1 = nums[i]
+            if i > 1 and nums[i-1] == num1:
+                continue
+            
             left = i+1
             right = length - 1
             
