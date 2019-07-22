@@ -1,0 +1,22 @@
+class Solution:
+    def searchMatrix(self, matrix: list, target: int) -> bool:
+        data = []
+        for i in matrix:
+            data += i
+            
+        left = 0
+        right = len(data) - 1
+        
+        while left <= right:
+            mid = (left + right) // 2
+            midData = data[mid]
+            
+            if midData == target:
+                return True
+            elif midData < target:
+                left = mid + 1
+            else:
+                right = mid - 1
+                
+        return False
+        
