@@ -1,0 +1,16 @@
+class Solution:
+    def moveZeroes(self, nums: list) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        index = 0
+        count = 0
+        while index < len(nums):
+            if nums[index] == 0:
+                nums.pop(index)
+                count += 1
+            else:
+                index += 1
+            
+        for _ in range(count):
+            nums.append(0)
