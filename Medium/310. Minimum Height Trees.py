@@ -1,38 +1,34 @@
-from collections import defaultdict
 class Solution:
     def findMinHeightTrees(self, n: int, edges: list) -> list:
         if not edges: return [0]
-        path = defaultdict(list)
+        
+        path = [[] for _ in range(n)]
+        degree = [0 for _ in range(n)]
         
         for p1,p2 in edges:
             path[p1].append(p2)
             path[p2].append(p1)
+            degree[p1] += 1
+            degree[p2] += 1
         
-        ans = []
-        
-        for i in path.keys():
-            visted = set()
-            queue = [[i],[]]
-            deep = 0
+        queue = [[],[]]
+
+        for i in range(n):
+            if degree[i] == 1:
+                queue[0].append(i)
+                
+                
+        while n > 2:
             while queue[0]:
-                cur = queue[0].pop(0)
-                visted.add(cur)
-                for j in path[cur]:
-                    if j not in visted:
+                left = queue[0].pop(0)
+                n -= 1
+                
+                for j in path[left]:
+                    degree[j] -= 1
+                    if degree[j] == 1:
                         queue[1].append(j)
                         
-                if not queue[0]:
-                    deep += 1
-                    queue[0],queue[1] = queue[1],queue[0]
-                    
-            if not ans:
-                ans.append(deep)
-                ans.append(i)
-            elif ans[0] == deep:
-                ans.append(i)
-            elif ans[0] > deep:
-                ans = []
-                ans.append(deep)
-                ans.append(i)
-
-        return ans[1:]
+            if not queue[0]:
+                queue[0],queue[1] = queue[1],queue[0]
+        
+        return queue[0]
