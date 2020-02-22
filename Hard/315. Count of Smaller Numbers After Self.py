@@ -1,7 +1,11 @@
+import bisect
 class Solution:
     def countSmaller(self, nums: list) -> list:
-        ans = [0] * len(nums)
-        for i,num in enumerate(nums):
-            for j in range(i):
-                if nums[j] > num:
-                    ans[j] += 1
+        ans = []
+        pos = []
+        for i,num in enumerate(nums[::-1]):
+            index = bisect.bisect_left(pos, num)
+            ans.append(index)
+            bisect.insort_left(pos, num)
+            
+        return ans[::-1]
