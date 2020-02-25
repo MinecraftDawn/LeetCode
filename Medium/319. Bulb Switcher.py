@@ -1,9 +1,10 @@
 class Solution:
     def bulbSwitch(self, n: int) -> int:
-        n += 1
-        ans = [True] * (n)
+        if n == 0: return 0
+        
+        ans = 1
         for i in range(2, n):
-            for j in range(0, n, i):
-                ans[j] = not ans[j]
+            if i*i <= n:
+                ans += 1
                 
-        return ans[1:].count(True)
+        return ans
