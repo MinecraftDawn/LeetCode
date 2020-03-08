@@ -1,44 +1,31 @@
-class Node:
-    def __init__(self, value:int):
-        self.value = value
-        self.neigh = []
-
 class Solution:
     def longestIncreasingPath(self, matrix: list) -> int:
-        if not matrix: return 0
-        visted = set()
+        mem = [[0] * len(matrix[0]) for _ in range(len(matrix))]
         
-        allNode = [[None] * len(matrix[0]) for _ in range(len(matrix))]
-        for row in range(len(matrix)):
-            for col in range(len(matrix[0])):
-                allNode[row][col] = Node(matrix[row][col])
-                
-        for row in range(len(matrix)):
-            for col in range(len(matrix[0])):
-                cur = matrix[row][col]
-                if row-1 >= 0 and matrix[row-1][col] > cur:
-                    allNode[row][col].neigh.append(allNode[row-1][col])
-                if row+1 < len(matrix) and matrix[row+1][col] > cur:
-                    allNode[row][col].neigh.append(allNode[row+1][col])
-                if col-1 >= 0 and matrix[row][col-1] > cur:
-                    allNode[row][col].neigh.append(allNode[row][col-1])
-                if col+1 < len(matrix[0]) and matrix[row][col+1] > cur:
-                    allNode[row][col].neigh.append(allNode[row][col+1])
+        def dfs(row:int, col:int):
+            if not mem[row][col]:    
+                curVal = matrix[row][col]
+                left = right = up = down = 0
+                if col - 1 >= 0 and matrix[row][col-1] > curVal:
+                    left = dfs(row, col-1)
                     
-        
-        def dfs(node:Node) -> int:
-            direct = [0]
-            visted.add(node)
-            for n in node.neigh:
-                if n not in visted:
-                    direct.append(dfs(n))
-                
-            visted.remove(node)
-            return max(direct) + 1
-        
+                if col + 1 < len(matrix[0]) and matrix[row][col+1] > curVal:
+                    right = dfs(row, col+1)
+                    
+                if row - 1 >= 0 and matrix[row-1][col] > curVal:
+                    up = dfs(row-1, col)
+                    
+                if row + 1 < len(matrix) and matrix[row+1][col] > curVal:
+                    down = dfs(row+1, col)
+                    
+                mem[row][col] = max((left, right, up, down))+1
+            
+            return mem[row][col]
+                    
+    
         maxPath = 0
         for row in range(len(matrix)):
             for col in range(len(matrix[0])):
-                maxPath = max(maxPath, dfs(allNode[row][col]))
+                maxPath = max(maxPath, dfs(row, col))
                 
         return maxPath
