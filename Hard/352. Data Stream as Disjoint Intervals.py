@@ -12,13 +12,18 @@ class SummaryRanges:
         left = bisect.bisect_left(self.stream, [val])
         right = bisect.bisect_right(self.stream, [val])
         flag = 0
+        
         if self.stream[left-1][1] == val-1:
             self.stream[left-1][1] = val
             flag += 1
+        elif self.stream[left-1][1] >= val:
+            return
         
         if self.stream[right][0] == val+1:
             self.stream[right][0] = val
             flag += 1
+        elif self.stream[right][0] <= val:
+            return
 
         if flag == 2:
             self.stream[left-1][1] = self.stream[right][1]
@@ -28,10 +33,3 @@ class SummaryRanges:
 
     def getIntervals(self) -> list:
         return self.stream[1:-1]
-        
-
-
-# Your SummaryRanges object will be instantiated and called as such:
-# obj = SummaryRanges()
-# obj.addNum(val)
-# param_2 = obj.getIntervals()
