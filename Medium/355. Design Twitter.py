@@ -1,4 +1,4 @@
-from collections import defaultdict
+from collections import defaultdict, deque
 class Twitter:
 
     def __init__(self):
@@ -6,16 +6,19 @@ class Twitter:
         Initialize your data structure here.
         """
         self.follings = defaultdict(set)
-        self.post = defaultdict(list)
-        self.h = {}
+        self.post = defaultdict(deque)
+        self.history = {}
         self.time = 0
 
     def postTweet(self, userId: int, tweetId: int) -> None:
         """
         Compose a new tweet.
         """
-        self.post[userId].append(tweetId)
-        self.h[tweetId] = self.time
+        posts = self.post[userId]
+        posts.append(tweetId)
+        if len(posts) > 10: posts.popleft()
+        
+        self.history[tweetId] = self.time
         self.time += 1
 
     def getNewsFeed(self, userId: int) -> list:
@@ -28,7 +31,7 @@ class Twitter:
         for follower in self.follings[userId]:
             posts.extend(self.post[follower])
             
-        return sorted(posts, key=lambda x: self.h[x], reverse=True)[:10]
+        return sorted(posts, key=lambda x: self.history[x], reverse=True)[:10]
 
     def follow(self, followerId: int, followeeId: int) -> None:
         """
