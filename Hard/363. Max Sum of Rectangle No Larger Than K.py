@@ -1,13 +1,23 @@
 class Solution:
     def maxSumSubmatrix(self, matrix: list, k: int) -> int:
-        self.matrix = matrix
+        if not matrix or not matrix[0]: return 0
+        
         row = len(matrix)
         col = len(matrix[0])
-        self.dp = [[0] * (col+1) for _ in range(row)]
+        
+        if row > col:
+            matrix = list(zip(*matrix))
+            row,col = col,row
+            
+        self.matrix = matrix
+        self.dp = [[0] * (col+1) for _ in range(row+1)]
         
         for i in range(row):
             for j in range(col):
-                self.dp[i][j] = self.dp[i][j-1] + matrix[i][j]
+                self.dp[i+1][j+1] = self.dp[i][j+1] + self.dp[i+1][j] + matrix[i][j] - self.dp[i][j]
+        
+        for i in self.dp:
+            print(i)
         
         ans = float("-inf")
         
@@ -22,8 +32,5 @@ class Solution:
         return ans
                     
     def getSum(self, x1, y1, x2, y2) -> int:
-        ans = 0
-        for i in range(x1, x2+1):
-            ans += self.dp[i][y2] - self.dp[i][y1-1]
-        
-        return ans
+        return self.dp[x2+1][y2+1] - self.dp[x1][y2+1] - self.dp[x2+1][y1] + self.dp[x1][y1]
+                   
