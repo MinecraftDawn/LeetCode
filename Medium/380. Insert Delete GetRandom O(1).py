@@ -5,17 +5,19 @@ class RandomizedSet:
         Initialize your data structure here.
         """
         
-        self.set = set()
+        self.dict = {}
+        self.list = []
         
 
     def insert(self, val: int) -> bool:
         """
         Inserts a value to the set. Returns true if the set did not already contain the specified element.
         """
-        if val in self.set:
+        if val in self.dict:
             return False
         else:
-            self.set.add(val)
+            self.dict[val] = len(self.list)
+            self.list.append(val)
             return True
         
 
@@ -23,8 +25,13 @@ class RandomizedSet:
         """
         Removes a value from the set. Returns true if the set contained the specified element.
         """
-        if val in self.set:
-            self.set.remove(val)
+        if val in self.dict:
+            index = self.dict[val]
+            tail = self.list[-1]
+            self.dict[tail] = index
+            self.list[index] = tail
+            self.list.pop()
+            self.dict.pop(val)
             return True
         else:
             return False
@@ -35,5 +42,4 @@ class RandomizedSet:
         Get a random element from the set.
         """
         import random
-        val = random.choice(list(self.set))
-        return val
+        return random.choice(self.list)
