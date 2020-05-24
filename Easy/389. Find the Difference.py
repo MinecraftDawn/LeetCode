@@ -3,9 +3,9 @@ class Solution:
         ans = 0
 
         for char in t:
-            ans += ord(char)
+            ans ^= ord(char)
 
         for char in s:
-            ans -= ord(char)
+            ans ^= ord(char)
 
         return chr(ans)
