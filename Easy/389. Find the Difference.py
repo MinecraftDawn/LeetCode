@@ -1,13 +1,11 @@
-from collections import Counter
 class Solution:
     def findTheDifference(self, s: str, t: str) -> str:
-        counter = Counter()
+        ans = 0
 
         for char in t:
-            counter[char] += 1
+            ans += ord(char)
 
         for char in s:
-            counter[char] -= 1
+            ans -= ord(char)
 
-
-        return list(counter.elements())[0]
+        return chr(ans)
