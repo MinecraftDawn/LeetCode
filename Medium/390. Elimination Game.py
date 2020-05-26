@@ -1,19 +1,17 @@
 class Solution:
     def lastRemaining(self, n: int) -> int:
-        tmp = [x for x in range(1, n+1)]
-        direct = True
+        ans = 1
 
-        while len(tmp) != 1:
-            tmp2 = []
-            if direct:
-                for i in range(1, len(tmp), 2):
-                    tmp2.append(tmp[i])
+        direction = True
+        add = 1
+        while n > 1:
+            if direction:
+                ans += add
             else:
-                for i in range(len(tmp)-2, -1, -2):
-                    tmp2.append(tmp[i])
-                tmp2.reverse()
+                if n % 2:
+                    ans += add
+            n //= 2
+            add *= 2
+            direction = not direction
 
-            direct = not direct
-            tmp = tmp2
-
-        return tmp[0]
+        return ans
