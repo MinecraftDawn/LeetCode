@@ -1,25 +1,13 @@
 class Solution:
     def isRectangleCover(self, rectangles: list) -> bool:
-        rectRange = [[float("inf"), float("inf")],
-                     [float("inf"),float("-inf")],
-                     [float("-inf"), float("inf")],
-                     [float("-inf"), float("-inf")]]
         sumArea = 0
 
         angleSet = set()
-
         for rect in rectangles:
-            rectRange[0] = min(rectRange[0], rect[:2])
-            if rect[0] <= rectRange[1][0] and rect[3] >= rectRange[1][1]:
-                rectRange[1] = [rect[0], rect[3]]
-            if rect[2] >= rectRange[2][0] and rect[1] <= rectRange[2][1]:
-                rectRange[2] = [rect[2], rect[1]]
-            rectRange[3] = max(rectRange[3], rect[2:])
-
             angles = [(rect[0], rect[1]),
-                     (rect[0], rect[3]),
-                     (rect[2], rect[1]),
-                     (rect[2], rect[3])]
+                      (rect[0], rect[3]),
+                      (rect[2], rect[1]),
+                      (rect[2], rect[3])]
 
             for angle in angles:
                 if angle in angleSet:
@@ -30,5 +18,6 @@ class Solution:
             sumArea += (rect[2] - rect[0]) * (rect[3] - rect[1])
 
         if len(angleSet) != 4: return False
+        angleSet = sorted(list(angleSet))
 
-        return (rectRange[3][0] - rectRange[0][0]) * (rectRange[3][1] - rectRange[0][1]) == (rectRange[2][0] - rectRange[1][0]) * (rectRange[1][1] - rectRange[2][1]) == sumArea
+        return (angleSet[3][1] - angleSet[0][1]) * (angleSet[3][0] - angleSet[0][0]) == sumArea
