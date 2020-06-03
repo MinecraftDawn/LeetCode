@@ -2,7 +2,7 @@ class Solution:
     def decodeString(self, s: str) -> str:
         num = ""
         string = ""
-        charStack = [[""]]
+        charStack = [""]
         numStack = []
 
         for char in s:
@@ -14,23 +14,23 @@ class Solution:
                 num = ""
 
                 if string:
-                    charStack[-1][-1] += string
+                    charStack[-1] += string
                     string = ""
 
-                charStack.append([""])
+                charStack.append("")
 
             elif char == ']':
                 if string:
-                    charStack[-1][-1] += string
+                    charStack[-1] += string
                     string = ""
-                charStack[-1][-1] *= numStack.pop()
-                tmp = charStack.pop().pop()
-                charStack[-1][-1] += tmp
+                charStack[-1] *= numStack.pop()
+                tmp = charStack.pop()
+                charStack[-1] += tmp
 
             else:
                 string += char
 
         if string:
-            charStack[-1][-1] += string
+            charStack[-1] += string
 
-        return charStack[-1][-1]
+        return charStack[-1]
