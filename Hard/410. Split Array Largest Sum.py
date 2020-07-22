@@ -1,9 +1,22 @@
+# Reference: https://www.cnblogs.com/grandyang/p/5933787.html
+
 class Solution:
     def splitArray(self, nums: list, m: int) -> int:
-        if m <= 1: return sum(nums)
+        left, right = max(nums), sum(nums)
 
-        ans = float("inf")
-        for i in range(1,len(nums)):
-            ans = min(ans, max(sum(nums[:i]), self.splitArray(nums[i:],m-1)))
+        while left < right:
+            mid = (left + right) // 2
+            count, cur = 1, 0
 
-        return ans
+            for num in nums:
+                cur += num
+                if cur > mid:
+                    cur = num
+                    count += 1
+
+            if count <= m:
+                right = mid
+            else:
+                left = mid + 1
+
+        return left
