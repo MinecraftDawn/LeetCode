@@ -1,45 +1,39 @@
-from collections import deque
-
-
 class Solution:
     def pacificAtlantic(self, matrix: list) -> list:
         if not matrix: return []
         self.matrix = matrix
         self.rows = len(self.matrix)
         self.cols = len(self.matrix[0])
-        self.ans = []
+        ans = []
+        self.hasArr = [[[False, False] for _ in range(self.cols)] for _ in range(self.rows)]
 
         for row in range(self.rows):
             for col in range(self.cols):
-                self.bfs(row, col)
+                visited = [[False for _ in range(self.cols)] for _ in range(self.rows)]
+                visited[row][col] = True
+                if self.dfs(row, col, visited) == [True, True]:
+                    ans.append((row, col))
 
-        return self.ans
+        return ans
 
-    def bfs(self, row: int, col: int):
-        visited = [[False for _ in range(self.cols)] for _ in range(self.rows)]
-        visited[row][col] = True
-        arrive = [False, False]
+    def dfs(self, row: int, col: int, visited: list):
+        curVal = self.matrix[row][col]
+        for i, j in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+            nxtRow = row + i
+            nxtCol = col + j
+            if nxtRow < 0 or nxtCol < 0:
+                self.hasArr[row][col][0] = True
+            elif nxtRow >= self.rows or nxtCol >= self.cols:
+                self.hasArr[row][col][1] = True
+            else:
+                nxtVal = self.matrix[nxtRow][nxtCol]
+                if nxtVal <= curVal:
+                    if visited[nxtRow][nxtCol]:
+                        t1, t2 = self.hasArr[nxtRow][nxtCol]
+                        self.hasArr[row][col] = [self.hasArr[row][col][0] or t1, self.hasArr[row][col][1] or t2]
+                    else:
+                        visited[nxtRow][nxtCol] = True
+                        t1, t2 = self.dfs(nxtRow, nxtCol, visited)
+                        self.hasArr[row][col] = [self.hasArr[row][col][0] or t1, self.hasArr[row][col][1] or t2]
 
-        queue = deque([(row, col)])
-        while queue:
-            curRow, curCol = queue.popleft()
-            curVal = self.matrix[curRow][curCol]
-            for i, j in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
-                nxtRow = curRow + i
-                nxtCol = curCol + j
-                if nxtRow < 0 or nxtCol < 0:
-                    arrive[0] = True
-                    if arrive[1]:
-                        self.ans.append((row, col))
-                        return
-                elif nxtRow >= self.rows or nxtCol >= self.cols:
-                    arrive[1] = True
-                    if arrive[0]:
-                        self.ans.append((row, col))
-                        return
-                else:
-                    nxtVal = self.matrix[nxtRow][nxtCol]
-
-                    if nxtVal <= curVal and not visited[nxtRow][nxtCol]:
-                        queue.append((nxtRow, nxtCol))
-                    visited[nxtRow][nxtCol] = True
+        return self.hasArr[row][col]
