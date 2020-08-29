@@ -13,13 +13,10 @@ class Solution:
             while n < delta:
                 found = False
                 for i in range(len(rep)):
-                    newRep = []
-                    for j in range(len(rep)):
-                        if rep[i] >= 3:
-                            newRep.append(rep[i])
-                    if not newRep:
+                    f = list(filter(lambda x: x >= 3, rep))
+                    if not f:
                         break
-                    if rep[i] == min(newRep, key=lambda x: x % 3):
+                    if rep[i] == min(f, key=lambda x: x % 3):
                         found = True
                         rep[i] -= 1
                         n += 1
@@ -27,6 +24,7 @@ class Solution:
                             break
                 if not found:
                     break
+
             repleft = sum(c // 3 for c in rep)
             return delta + max(repleft, self.caseNum(s))
 
