@@ -4,29 +4,27 @@
 #         self.val = val
 #         self.left = left
 #         self.right = right
+from collections import defaultdict
+
+
 class Solution:
     def __init__(self):
         self.ans = 0
+        self.pathVal = defaultdict(int)
+        self.pathVal[0] = 1
 
     def pathSum(self, root: TreeNode, target: int) -> int:
         if not root: return 0
 
-        self.nodes = []
         self.target = target
-        self.burst(root, 0)
-
-        for node in self.nodes[1:]:
-            self.burst(node, 0)
+        self.dfs(root, 0)
 
         return self.ans
 
-    def burst(self, node: TreeNode, val: int):
-        self.nodes.append(node)
+    def dfs(self, node: TreeNode, val: int):
         curVal = val + node.val
-        if curVal == self.target:
-            self.ans += 1
-
-        if node.left:
-            self.burst(node.left, curVal)
-        if node.right:
-            self.burst(node.right, curVal)
+        self.ans += self.pathVal[curVal - self.target]
+        self.pathVal[curVal] += 1
+        if node.left: self.dfs(node.left, curVal)
+        if node.right: self.dfs(node.right, curVal)
+        self.pathVal[curVal] -= 1
