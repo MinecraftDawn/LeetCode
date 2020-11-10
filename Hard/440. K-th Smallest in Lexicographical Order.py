@@ -1,18 +1,27 @@
-from collections import defaultdict
-
+#Reference: https://leetcode.com/problems/k-th-smallest-in-lexicographical-order/discuss/770352/100-faster-easy-java-solution-with-detail-explnation
 
 class Solution:
     def findKthNumber(self, n: int, k: int) -> int:
-        hashMap = defaultdict(list)
+        if k == 0: return 0
 
-        for i in range(1, n + 1):
-            i = str(i)
-            hashMap[i[0]].append(i)
+        cur = 1
+        k -= 1
 
-        i = 1
+        def countSteps(left, right, n):
+            res = 0
+            while left <= n or right <= n:
+                res += min(n + 1, right) - left
+                left *= 10
+                right *= 10
+
+            return res
+
         while k > 0:
-            if len(hashMap[str(i)]) >= k:
-                return sorted(hashMap[str(i)])[k - 1]
+            steps = countSteps(cur, cur + 1, n)
+            if steps <= k:
+                cur += 1
+                k -= steps
             else:
-                k -= len(hashMap[str(i)])
-                i += 1
+                cur *= 10
+                k -= 1
+        return cur
