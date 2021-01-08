@@ -1,16 +1,13 @@
-from collections import defaultdict
-
-
 class Solution:
     def findDuplicates(self, nums: list) -> list:
-        hashmap = defaultdict(int)
+        array = [0] * len(nums)
         ans = []
 
         for num in nums:
-            hashmap[num] += 1
+            array[num - 1] += 1
 
-        for k, v in hashmap.items():
-            if v > 1:
-                ans.append(k)
-                
+        for i in range(len(array)):
+            if array[i] == 2:
+                ans.append(i + 1)
+
         return ans
